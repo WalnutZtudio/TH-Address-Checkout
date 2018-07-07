@@ -149,7 +149,8 @@ function my_api_customer_response_billing($customer_data, $customer, $fields, $s
 	$customer_data['billing_address']['district'] = (!empty($district) ? $district : '');
 	return $customer_data;
   }
-  add_filter('woocommerce_api_customer_response', 'my_api_customer_response_billing', 10, 4);
+	add_filter('woocommerce_api_customer_response', 'my_api_customer_response_billing', 10, 4);
+	
   function my_api_customer_response_shipping($customer_data, $customer, $fields, $server) {
 	$district = get_user_meta($customer->ID, 'shipping_district', true);
 	$customer_data['shipping_address']['district'] = (!empty($district) ? $district : '');
