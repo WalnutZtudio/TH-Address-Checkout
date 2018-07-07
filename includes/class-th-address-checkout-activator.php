@@ -127,12 +127,12 @@ function walnut_new_address_formats( $formats ) {
     $ship = $formats['default'] ="{shipping_district}";
     if ($bill == $ship) {
 
-       $district = "\nแขวง{billing_district}";
+       $district = "\n{billing_district}";
     } else{
-        $district = "\nแขวง{billing_district}, {shipping_district}";
+        $district = "\n{billing_district}, {shipping_district}";
     }
 
-    $formats['default'] = "{name}\n{company}\n{address_1}" . $district . " เขต{city}\n{state} {postcode}\n{country}";
+    $formats['default'] = "{name}\n{company}\n{address_1}" . $district . " {city}\n{state} {postcode}\n{country}";
 
     return $formats;
 }
