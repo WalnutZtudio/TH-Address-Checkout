@@ -51,7 +51,7 @@ class Th_Address_Checkout_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
+	
 	}
 
 	/**
@@ -101,3 +101,72 @@ class Th_Address_Checkout_Admin {
 	}
 
 }
+/**
+ * Customize admin billing fields
+ */
+function my_custom_admin_billing_fields($fields) {
+	unset($fields['company']);
+	unset($fields['address_2']);
+	
+	$fields['address_1'] = array(
+		'label'       => __( 'Address', 'woocommerce' ),
+		'show'        => false,
+	  );
+
+	$fields['district'] = array(
+	  'label'       => __( 'District', 'th-address-checkout' ),
+	  'show'        => false,
+	);
+	return $fields;
+  }
+  add_filter('woocommerce_admin_billing_fields', 'my_custom_admin_billing_fields', 10, 1);
+
+  /**
+ * Customize admin billing fields
+ */
+function my_custom_admin_shipping_fields($fields) {
+	unset($fields['company']);
+	unset($fields['address_2']);
+	
+	$fields['address_1'] = array(
+		'label'       => __( 'Address', 'woocommerce' ),
+		'show'        => false,
+	  );
+
+	$fields['district'] = array(
+	  'label'       => __( 'District', 'th-address-checkout' ),
+	  'show'        => false,
+	);
+	return $fields;
+  }
+  add_filter('woocommerce_admin_shipping_fields', 'my_custom_admin_shipping_fields', 10, 1);
+
+/**
+ * Add fields to customer API response
+ */
+function my_api_customer_response_billing($customer_data, $customer, $fields, $server) {
+	$district = get_user_meta($customer->ID, 'billing_district', true);
+	$customer_data['billing_address']['district'] = (!empty($district) ? $district : '');
+	return $customer_data;
+  }
+  add_filter('woocommerce_api_customer_response', 'my_api_customer_response_billing', 10, 4);
+  function my_api_customer_response_shipping($customer_data, $customer, $fields, $server) {
+	$district = get_user_meta($customer->ID, 'shipping_district', true);
+	$customer_data['shipping_address']['district'] = (!empty($district) ? $district : '');
+	return $customer_data;
+  }
+  add_filter('woocommerce_api_customer_response', 'my_api_customer_response_shipping', 10, 4);
+  
+  /**
+   * Adds fields to edit customer billing address API
+   */
+  function my_api_customer_billing_address($fields) {
+	$fields[] = 'district';
+	return $fields;
+  }
+  add_filter('woocommerce_api_customer_billing_address', 'my_api_customer_billing_address', 10, 1);
+  function my_api_customer_shipping_address($fields) {
+	$fields[] = 'district';
+	return $fields;
+  }
+  add_filter('woocommerce_api_customer_shipping_address', 'my_api_customer_shipping_address', 10, 1);

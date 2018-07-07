@@ -14,7 +14,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       TH Address Checkout
- * Plugin URI:        https://walnutztudio
+ * Plugin URI:        https://walnutztudio.com
  * Description:       Autocomplete thailand address for Woocommerce checkout.
  * Version:           1.0.0
  * Author:            WalnutZtudio
@@ -77,6 +77,8 @@ function run_th_address_checkout() {
 
 	$plugin = new Th_Address_Checkout();
 	$plugin->run();
+
+	activate_th_address_checkout();
 
 }
 run_th_address_checkout();

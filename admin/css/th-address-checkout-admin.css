@@ -2,3 +2,7 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+ #order_data .order_data_column ._billing_address_1_field, #order_data .order_data_column ._shipping_address_1_field {
+    width:100% !important;
+}
