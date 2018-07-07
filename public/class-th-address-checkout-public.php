@@ -114,6 +114,93 @@ class Th_Address_Checkout_Public {
 	}
 }
 
+/* Custome Thai Province order */
+if (get_locale() == 'th' || 'en') {
+	add_filter( 'woocommerce_states', 'walnut_woocommerce_states' );
+}
+function walnut_woocommerce_states( $states ) {
+	$states['TH'] = array(
+		'TH-81' => 'กระบี่',
+		'TH-10' => 'กรุงเทพมหานคร',
+		'TH-71' => 'กาญจนบุรี',
+		'TH-46' => 'กาฬสินธุ์',
+		'TH-62' => 'กำแพงเพชร',
+		'TH-40' => 'ขอนแก่น',
+		'TH-22' => 'จันทบุรี',
+		'TH-24' => 'ฉะเชิงเทรา',
+		'TH-20' => 'ชลบุรี',
+		'TH-18' => 'ชัยนาท',
+		'TH-36' => 'ชัยภูมิ',
+		'TH-86' => 'ชุมพร',
+		'TH-57' => 'เชียงราย',
+		'TH-50' => 'เชียงใหม่',
+		'TH-92' => 'ตรัง',
+		'TH-23' => 'ตราด',
+		'TH-63' => 'ตาก',
+		'TH-26' => 'นครนายก',
+		'TH-73' => 'นครปฐม',
+		'TH-48' => 'นครพนม',
+		'TH-30' => 'นครราชสีมา',
+		'TH-80' => 'นครศรีธรรมราช',
+		'TH-60' => 'นครสวรรค์',
+		'TH-12' => 'นนทบุรี',
+		'TH-96' => 'นราธิวาส',
+		'TH-55' => 'น่าน',
+		'TH-38' => 'บึงกาฬ',
+		'TH-31' => 'บุรีรัมย์',
+		'TH-13' => 'ปทุมธานี',
+		'TH-77' => 'ประจวบคีรีขันธ์',
+		'TH-25' => 'ปราจีนบุรี',
+		'TH-94' => 'ปัตตานี',
+		'TH-14' => 'พระนครศรีอยุธยา',
+		'TH-56' => 'พะเยา',
+		'TH-82' => 'พังงา',
+		'TH-93' => 'พัทลุง',
+		'TH-66' => 'พิจิตร',
+		'TH-65' => 'พิษณุโลก',
+		'TH-76' => 'เพชรบุรี',
+		'TH-67' => 'เพชรบูรณ์',
+		'TH-54' => 'แพร่',
+		'TH-83' => 'ภูเก็ต',
+		'TH-44' => 'มหาสารคาม',
+		'TH-49' => 'มุกดาหาร',
+		'TH-58' => 'แม่ฮ่องสอน',
+		'TH-35' => 'ยโสธร',
+		'TH-95' => 'ยะลา',
+		'TH-45' => 'ร้อยเอ็ด',
+		'TH-85' => 'ระนอง',
+		'TH-21' => 'ระยอง',
+		'TH-70' => 'ราชบุรี',
+		'TH-16' => 'ลพบุรี',
+		'TH-52' => 'ลำปาง',
+		'TH-51' => 'ลำพูน',
+		'TH-42' => 'เลย',
+		'TH-33' => 'ศรีสะเกษ',
+		'TH-47' => 'สกลนคร',
+		'TH-90' => 'สงขลา',
+		'TH-91' => 'สตูล',
+		'TH-11' => 'สมุทรปราการ',
+		'TH-75' => 'สมุทรสงคราม',
+		'TH-74' => 'สมุทรสาคร',
+		'TH-27' => 'สระแก้ว',
+		'TH-19' => 'สระบุรี',
+		'TH-17' => 'สิงห์บุรี',
+		'TH-64' => 'สุโขทัย',
+		'TH-72' => 'สุพรรณบุรี',
+		'TH-84' => 'สุราษฎร์ธานี',
+		'TH-32' => 'สุรินทร์',
+		'TH-43' => 'หนองคาย',
+		'TH-39' => 'หนองบัวลำภู',
+		'TH-15' => 'อ่างทอง',
+		'TH-37' => 'อำนาจเจริญ',
+		'TH-41' => 'อุดรธานี',
+		'TH-53' => 'อุตรดิตถ์',
+		'TH-61' => 'อุทัยธานี',
+		'TH-34' => 'อุบลราชธานี'
+		);
+	return $states;
+}
+
 // Account Edit Adresses: Remove and reorder addresses fields
 add_filter(  'woocommerce_default_address_fields', 'custom_default_address_fields', 20, 1 );
 function custom_default_address_fields( $fields ) {
@@ -167,7 +254,36 @@ function custom_billing_fields( $fields ) {
 	$fields['billing_state']['priority'] = 70;
     $fields['billing_state']['class'] = array('form-row-first');
     $fields['billing_postcode']['priority'] = 80;
-    $fields['billing_postcode']['class'] = array('form-row-last');
+	$fields['billing_postcode']['class'] = array('form-row-last');
+
+    return $fields;
+}
+
+// Account Edit Adresses: Reorder billing email and phone fields
+add_filter(  'woocommerce_shipping_fields', 'custom_shipping_fields', 20, 1 );
+function custom_shipping_fields( $fields ) {
+    // Only on account pages
+    if( ! is_account_page() ) return $fields;
+
+    ## ---- 2.  Sort billing email and phone fields ---- ##
+	
+	$fields['shipping_email']['priority'] = 30;
+	$fields['shipping_email']['class'] = array('form-row-first');
+	$fields['shipping_email']['label'] = 'Email';
+	$fields['shipping_email']['required'] = true;
+    $fields['shipping_phone']['priority'] = 40;
+	$fields['shipping_phone']['class'] = array('form-row-last');
+	$fields['shipping_phone']['label'] = 'Phone';
+	$fields['shipping_district']['priority'] = 50;
+	$fields['shipping_district']['class'] = array('form-row-first');
+	$fields['shipping_district']['label'] = 'District';
+	$fields['shipping_district']['required'] = true;
+    $fields['shipping_city']['priority'] = 60;
+    $fields['shipping_city']['class'] = array('form-row-last');
+	$fields['shipping_state']['priority'] = 70;
+    $fields['shipping_state']['class'] = array('form-row-first');
+    $fields['shipping_postcode']['priority'] = 80;
+    $fields['shipping_postcode']['class'] = array('form-row-last');
 
     return $fields;
 }
@@ -182,6 +298,7 @@ function my_account_address_formatted_addresses( $address, $customer_id, $addres
 }
 add_filter( 'woocommerce_my_account_my_address_formatted_address', function( $args, $customer_id, $name ){
     // the phone is saved as billing_phone and shipping_phone
-    $args['billing_district'] = get_user_meta( $customer_id, $name . '_district', true );
+	$args['billing_district'] = get_user_meta( $customer_id, $name . '_district', true );
+	$args['shipping_district'] = get_user_meta( $customer_id, $name . '_district', true );
     return $args;
 }, 10, 3 ); 

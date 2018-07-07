@@ -120,6 +120,24 @@ return $fields;
 }
  
 // ------------------------------------
+// Show Shipping & Billing District
+add_filter( 'woocommerce_localisation_address_formats', 'walnut_new_address_formats');
+function walnut_new_address_formats( $formats ) {
+    $bill = $formats['default'] ="{billing_district}";
+    $ship = $formats['default'] ="{shipping_district}";
+    if ($bill == $ship) {
+
+       $district = "\nแขวง{billing_district}";
+    } else{
+        $district = "\nแขวง{billing_district}, {shipping_district}";
+    }
+
+    $formats['default'] = "{name}\n{company}\n{address_1}" . $district . " เขต{city}\n{state} {postcode}\n{country}";
+
+    return $formats;
+}
+
+// ------------------------------------
 // Create 'replacements' for new Address Fields
 add_filter( 'woocommerce_formatted_address_replacements', 'add_new_replacement_fields',10,2 );
 function add_new_replacement_fields( $replacements, $address ) {
@@ -128,10 +146,3 @@ function add_new_replacement_fields( $replacements, $address ) {
 return $replacements;
 }
 
-// ------------------------------------
-// Show Shipping & Billing District
-add_filter( 'woocommerce_localisation_address_formats', 'walnut_new_address_formats' );
-function walnut_new_address_formats( $formats ) {
-    $formats['TH'] = "{name}\n{company}\n{address_1}\n{billing_district}{shipping_district} {city}\n{state} {postcode}\n{country}";
-    return $formats;
-}

@@ -164,9 +164,42 @@ function my_api_customer_response_billing($customer_data, $customer, $fields, $s
 	$fields[] = 'district';
 	return $fields;
   }
-  add_filter('woocommerce_api_customer_billing_address', 'my_api_customer_billing_address', 10, 1);
+	add_filter('woocommerce_api_customer_billing_address', 'my_api_customer_billing_address', 10, 1);
+	
   function my_api_customer_shipping_address($fields) {
 	$fields[] = 'district';
 	return $fields;
   }
-  add_filter('woocommerce_api_customer_shipping_address', 'my_api_customer_shipping_address', 10, 1);
+	add_filter('woocommerce_api_customer_shipping_address', 'my_api_customer_shipping_address', 10, 1);
+	
+
+/**
+ * Add fields to Profile information
+ */
+	add_action( 'show_user_profile', 'yoursite_extra_user_profile_fields' );
+	add_action( 'edit_user_profile', 'yoursite_extra_user_profile_fields' );
+	function yoursite_extra_user_profile_fields( $user ) {
+	?>
+		<h3><?php _e("Extra profile information", "blank"); ?></h3>
+		<table class="form-table">
+			<tr>
+				<th><label for="district"><?php _e("District"); ?></label></th>
+				<td>
+					<input type="text" name="district" id="district" class="regular-text" 
+							value="<?php echo esc_attr( get_the_author_meta( 'billing_district', $user->ID ) ); ?>" /><br />
+			</td>
+			</tr>
+		</table>
+	<?php
+	}
+	
+	add_action( 'personal_options_update', 'yoursite_save_extra_user_profile_fields' );
+	add_action( 'edit_user_profile_update', 'yoursite_save_extra_user_profile_fields' );
+	function yoursite_save_extra_user_profile_fields( $user_id ) {
+		$saved = false;
+		if ( current_user_can( 'edit_user', $user_id ) ) {
+			update_user_meta( $user_id, 'billing_district', $_POST['billing_district'] );
+			$saved = true;
+		}
+		return true;
+	}
